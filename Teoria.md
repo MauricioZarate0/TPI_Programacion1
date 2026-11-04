@@ -40,3 +40,7 @@ o Estadísticas básicas:
 o Archivos CSV: Es un formato de archivo de texto, que usa un ordenamiento tipo fila-columna, cada valor separado por una , (coma) es una columna y las filas son dadas por los saltos de linea.
 -------------------------------------------
 • Definir el flujo de operaciones principales en un diagrama o esquema: 
+
+-------------------------------------------
+Problemas durante la programacion:
+-Funcion nuevo_pais(): linea 109 ->No encontraba la forma de añadir un elemento al final de la lista del csv. ya que con el metodo "w" se sobreescribia y con "a" no encontraba la forma de hacer un salto de linea con el escritor, la solucion que encontre fue sobreescribir el archivo y volcar la variable de registro sobre el archivo con la funcion cargar_archivo()

@@ -10,10 +10,10 @@ while True:
     match opcion:
         case 1: #Agregar pais con todos los datos necesarios
             nuevo_pais(registro,cabecera)
-        case 2:
-            pass
-        case 3:
-            pass
+        case 2: #Actualizar datos de poblacion y superficie de un pais
+            actualizar_datos(registro,cabecera)
+        case 3: #Buscar pais por coincidencia o nombre completo
+            buscar_pais(registro)
         case 4:
             pass
         case 5:
