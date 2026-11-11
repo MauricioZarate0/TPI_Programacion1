@@ -150,3 +150,116 @@ def buscar_pais(registro): #Buscar un pais o paises por coincidencia parcial o t
             print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
         return
 
+def filtrar_paises(registro): #Filtro de paises por continente,poblacion,superficie
+    opcion = input("a.Filtro por continente\nb.Filtro por rango de poblacion\nc.Filtro por rango de superficie\nElija una opcion para continuar -->")
+    match opcion:
+        case "a": #Por continente
+            continente=pedir_cadena("Ingrese el continente para filtrar los paises: ",False)
+            if continente==None:
+                return
+            if continente in continentes: #Recorro el registro de paises y me quedo con aquellos que coincidan con el continente
+                print(f"=== PAISES DE {(continente).upper()} ===")
+                for paises in registro:
+                    if paises["continente"]==continente:
+                        print(f"Pais: {paises["nombre"]} - Poblacion: {paises["poblacion"]} - Superficie: {paises["superficie"]}")
+                return
+            else:
+                print("Error, ingrese un continente real.")
+                return
+        case "b": #Por poblacion
+            minimo = pedir_entero("Ingrese el rango minimo de poblacion: ",-1,persiste=False)
+            maximo= pedir_entero("Ingrese el rango maximo de poblacion: ",-1,persiste=False)
+            if minimo==None or maximo==None:
+                return
+            if minimo>maximo:
+                print("El minimo debe ser inferior al maximo")
+                return
+            print(f"== Lista de paises con poblacion entre {minimo}-{maximo} ==") #Comparo y imprimo aquellos que superen el minimo pero sean inferiores al maximo
+            for paises in registro:
+                if paises["poblacion"]>=minimo and paises["poblacion"]<=maximo:
+                    print(f"Pais: {paises["nombre"]} - Poblacion: {paises["poblacion"]} - Superficie: {paises["superficie"]} - Continente: {paises["continente"]}")
+            return
+        case "c": #por superficie
+            minimo = pedir_entero("Ingrese el rango minimo de superficie (km2): ",-1,persiste=False)
+            maximo= pedir_entero("Ingrese el rango maximo de superficie (km2): ",-1,persiste=False)
+            if minimo==None or maximo==None:
+                return
+            if minimo>maximo:
+                print("El minimo debe ser inferior al maximo")
+                return
+            print(f"== Lista de paises con superficie entre {minimo}-{maximo} ==") #Comparo y imprimo aquellos que superen el minimo pero sean inferiores al maximo
+            for paises in registro:
+                if paises["superficie"]>=minimo and paises["superficie"]<=maximo:
+                    print(f"Pais: {paises["nombre"]} - Poblacion: {paises["poblacion"]} - Superficie: {paises["superficie"]} - Continente: {paises["continente"]}")
+            return
+        case _:
+            print("Error, elija una opcion valida.")
+            return
+
+def ordenar_paises(registro): #Organizar paises por nombre,poblacion,superficie
+    registro_nuevo = registro
+    opcion=input("a.Organizar por nombre\nb.Organizar por poblacion\nc.Organizar por superficie\nElija una opcion para continuar --> ").lower()
+    match opcion:
+        case "a": #Por nombre - Ordenar la lista usando la llave "nombre"
+            opcion_orden=input("Desea que este ordenado de forma:\n1.Ascendente\n2.Descendente\nElija una opcion --> ")
+            match opcion_orden:
+                case "1": #Ascendente
+                    registro_ordenado = sorted(registro, key=lambda p: p["nombre"]) 
+                    for pais in registro_ordenado:
+                        print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
+                case "2": #Descendente
+                    registro_ordenado = sorted(registro, key=lambda p: p["nombre"],reverse=True) 
+                    for pais in registro_ordenado:
+                        print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
+                case _:
+                    print("Error, elija una de las dos formas.")
+                    return
+        case "b": #Por poblacion - Ordenar la lista usando la llave "poblacion"
+            opcion_orden=input("Desea que este ordenado de forma:\n1.Ascendente\n2.Descendente\nElija una opcion --> ")
+            match opcion_orden:
+                case "1": #Ascendente
+                    registro_ordenado = sorted(registro, key=lambda p: p["poblacion"]) 
+                    for pais in registro_ordenado:
+                        print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
+                case "2": #Descendente
+                    registro_ordenado = sorted(registro, key=lambda p: p["superficie"],reverse=True) 
+                    for pais in registro_ordenado:
+                        print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
+                case _:
+                    print("Error, elija una de las dos formas.")
+                    return
+        case "c": #Por superficie - Ordenar la lista usando la llave "superficie"
+            opcion_orden=input("Desea que este ordenado de forma:\n1.Ascendente\n2.Descendente\nElija una opcion --> ")
+            match opcion_orden:
+                case "1": #Ascendente
+                    registro_ordenado = sorted(registro, key=lambda p: p["superficie"]) #Ordenar la lista usando la llave "superficie"
+                    for pais in registro_ordenado:
+                        print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
+                case "2": #Descendente
+                    registro_ordenado = sorted(registro, key=lambda p: p["superficie"],reverse=True) #Ordenar la lista usando la llave "superficie"
+                    for pais in registro_ordenado:
+                        print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
+                case _:
+                    print("Error, elija una de las dos formas.")
+                    return
+        case _:
+            print("Error, elija una opcion valida.")
+            return
+
+def mostrar_estadisticas(registro): #País con mayor y menor población - Promedio de población - Promedio de superficie - Cantidad de países por continente
+    print("==== ESTADISTICAS ====")
+    menu = input("1.Pais con mayor y menor poblacion\n2.Promedio de poblacion\n3.Promedio de superficie\n4.Cantidad de paises por continente\nElija una opcion --> ")
+    match menu:
+        case "1": #Pais con mayor y menor poblacion
+            registro_ordenado=sorted(registro,key=lambda p:p["poblacion"]) #Ordeno y acceso al numero de poblacion mas bajo y al mas alto mediante indice
+            print(f"Pais con menor poblacion: Pais: {registro_ordenado[0]["nombre"]} - Poblacion: {registro_ordenado[0]["poblacion"]} - Superficie: {registro_ordenado[0]["superficie"]} - Continente: {registro_ordenado[0]["continente"]}")
+            print(f"Pais con mayor poblacion: Pais: {registro_ordenado[-1]["nombre"]} - Poblacion: {registro_ordenado[-1]["poblacion"]} - Superficie: {registro_ordenado[-1]["superficie"]} - Continente: {registro_ordenado[-1]["continente"]}")
+        case "2": #Promedio de poblacion
+            pass
+        case "3": #Promedio de superficie
+            pass
+        case "4": #Cantidad de paises por continente
+            pass
+        case _:
+            print("Error, reintente eligiendo una de las opciones validas")
+            return

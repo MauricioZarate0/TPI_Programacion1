@@ -15,13 +15,11 @@ while True:
         case 3: #Buscar pais por coincidencia o nombre completo
             buscar_pais(registro)
         case 4:
-            pass
+            filtrar_paises(registro)
         case 5:
-            pass
+            ordenar_paises(registro)
         case 6:
-            pass
+            mostrar_estadisticas(registro)
         case 7:
             print("Saliendo del programa")
             break
-        case 8:
-            print(registro)
