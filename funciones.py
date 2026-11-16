@@ -7,17 +7,12 @@ def pedir_entero(mensaje,minimo=None,maximo=None,persiste=True):
     while True:
         try:
             entrada = int(input(mensaje).strip())
-            if entrada=="":
-                print("Error, ingrese algo.")
-                if persiste==False:
-                    return
-                
             if minimo is not None and entrada<minimo:
                 print(f"Error,el valor debe ser mayor a {minimo}.")
                 if persiste==False:
                     return
             elif maximo is not None and entrada>maximo:
-                print(f"Error,el valor debe ser mayor a {maximo}.")
+                print(f"Error,el valor debe ser menor a {maximo}.")
                 if persiste==False:
                     return
             else:
@@ -49,13 +44,22 @@ def cargar_archivo(cabecera): #Cargar elementos del archivo en la variable
                     superficie = int(lineas["superficie"])
                     continente = (lineas["continente"]).title()
                     if not continente in continentes: #corroborar que los continentes coincidan con los validos
-                        next(lector)
+                        continue
                     pais={"nombre":nombre,"poblacion":poblacion,"superficie":superficie,"continente":continente}
                     registro_nuevo.append(pais)
                 except ValueError: #Errores al intentar volver int las variables
                     continue
+                except AttributeError: #Salta si falta una columna
+                    continue
                 except TypeError:
                     continue
+                
+        return registro_nuevo
+    except StopIteration: #Si el archivo esta vacio, el lector salta, hay que manejarlo como vacio
+        print("No se encontro un archivo guardado localmente.")
+        with open(direccion_archivo,"w",newline="",encoding="utf-8") as archivo:
+            escritor = csv.DictWriter(archivo,fieldnames=cabecera)
+            escritor.writeheader()
         return registro_nuevo
     except FileNotFoundError: #Si no se encuentra el archivo, lo creamos y dejamos escrito el nombre de las columnas
         print("No se encontro un archivo guardado localmente.")
@@ -65,10 +69,15 @@ def cargar_archivo(cabecera): #Cargar elementos del archivo en la variable
         return registro_nuevo
 
 def cargar_registro(registro,cabecera): #Cargar elemento de la variable al archivo
-    with open(direccion_archivo,"w",newline="",encoding="utf-8") as archivo:
-        escritor=csv.DictWriter(archivo,fieldnames=cabecera)
-        escritor.writeheader()
-        escritor.writerows(registro)
+    try:
+        with open(direccion_archivo,"w",newline="",encoding="utf-8") as archivo:
+            escritor=csv.DictWriter(archivo,fieldnames=cabecera)
+            escritor.writeheader()
+            escritor.writerows(registro)
+            return
+    except PermissionError:
+        print("Error, un programa esta utilizando el archivo.")
+        return None
 
 def comparar_pais(pais): #Acceso al .txt con los paises registrados por la ONU
     with open("lista_paises.txt","r",encoding="utf-8") as archivo:
@@ -79,6 +88,12 @@ def comparar_pais(pais): #Acceso al .txt con los paises registrados por la ONU
                 return pais
         print("El pais ingresado no existe o no coincide con los registros de la ONU.")
         return None
+
+def registro_vacio(registro):
+    if len(registro)==0:
+        print("Error, no hay ningun pais cargado, comience con la opcion 1.")
+        return None
+    return
 #MENU
 
 #1
@@ -125,20 +140,27 @@ def actualizar_datos(registro,cabecera): #Actualizar poblacion y superficie de u
             superficie=pedir_entero("Ingrese la nueva superficie (km2): ",0,persiste=True)
             lineas["poblacion"]=poblacion
             lineas["superficie"]=superficie
-            cargar_registro(registro_nuevo,cabecera)
+            valor=cargar_registro(registro_nuevo,cabecera)
+            if valor==None:
+                return
+            print("Se actualizo el pais correctamente")
             return
     print("No se encontro registrado el pais, use la opcion 1 si desea agregarlo al registro") #Si nose encuentra al pais en el registro se devuelve al menu
     return
 
 def buscar_pais(registro): #Buscar un pais o paises por coincidencia parcial o total
-    nombre=pedir_cadena("Ingrese el nombre del pais que desea buscar (respete tildes): ",False)
-    if nombre==None: #None=error
+    nombre=input("Ingrese el nombre del pais que desea buscar (respete tildes): ").strip()
+    if nombre.isdigit():
+        print("Error, ingrese una cadena de texto.")
+        return
+    if nombre=="":
+        print("Error, ingrese algo.")
         return
 
     coincidencias=[]
     for pais in registro: #recorro el registro buscando el texto ingresado
         nombre_registro=pais["nombre"]
-        if nombre in nombre_registro: #Verifico que el texto ingresado sea igual al nombre o parcialmente igual y lo agrego a las coincidencias
+        if nombre.lower() in nombre_registro.lower(): #Verifico que el texto ingresado sea igual al nombre o parcialmente igual y lo agrego a las coincidencias
             coincidencias.append(pais)
 
     if len(coincidencias)==0: #Si no hay coincidencias se sale de la funcion
@@ -154,7 +176,7 @@ def filtrar_paises(registro): #Filtro de paises por continente,poblacion,superfi
     opcion = input("a.Filtro por continente\nb.Filtro por rango de poblacion\nc.Filtro por rango de superficie\nElija una opcion para continuar -->")
     match opcion:
         case "a": #Por continente
-            continente=pedir_cadena("Ingrese el continente para filtrar los paises: ",False)
+            continente=pedir_cadena("Ingrese el continente para filtrar los paises: ",False).lower()
             if continente==None:
                 return
             if continente in continentes: #Recorro el registro de paises y me quedo con aquellos que coincidan con el continente
@@ -167,8 +189,8 @@ def filtrar_paises(registro): #Filtro de paises por continente,poblacion,superfi
                 print("Error, ingrese un continente real.")
                 return
         case "b": #Por poblacion
-            minimo = pedir_entero("Ingrese el rango minimo de poblacion: ",-1,persiste=False)
-            maximo= pedir_entero("Ingrese el rango maximo de poblacion: ",-1,persiste=False)
+            minimo = pedir_entero("Ingrese el rango minimo de poblacion: ",0,persiste=False)
+            maximo= pedir_entero("Ingrese el rango maximo de poblacion: ",0,persiste=False)
             if minimo==None or maximo==None:
                 return
             if minimo>maximo:
@@ -180,8 +202,8 @@ def filtrar_paises(registro): #Filtro de paises por continente,poblacion,superfi
                     print(f"Pais: {paises["nombre"]} - Poblacion: {paises["poblacion"]} - Superficie: {paises["superficie"]} - Continente: {paises["continente"]}")
             return
         case "c": #por superficie
-            minimo = pedir_entero("Ingrese el rango minimo de superficie (km2): ",-1,persiste=False)
-            maximo= pedir_entero("Ingrese el rango maximo de superficie (km2): ",-1,persiste=False)
+            minimo = pedir_entero("Ingrese el rango minimo de superficie (km2): ",0,persiste=False)
+            maximo= pedir_entero("Ingrese el rango maximo de superficie (km2): ",0,persiste=False)
             if minimo==None or maximo==None:
                 return
             if minimo>maximo:
@@ -197,7 +219,6 @@ def filtrar_paises(registro): #Filtro de paises por continente,poblacion,superfi
             return
 
 def ordenar_paises(registro): #Organizar paises por nombre,poblacion,superficie
-    registro_nuevo = registro
     opcion=input("a.Organizar por nombre\nb.Organizar por poblacion\nc.Organizar por superficie\nElija una opcion para continuar --> ").lower()
     match opcion:
         case "a": #Por nombre - Ordenar la lista usando la llave "nombre"
@@ -222,7 +243,7 @@ def ordenar_paises(registro): #Organizar paises por nombre,poblacion,superficie
                     for pais in registro_ordenado:
                         print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
                 case "2": #Descendente
-                    registro_ordenado = sorted(registro, key=lambda p: p["superficie"],reverse=True) 
+                    registro_ordenado = sorted(registro, key=lambda p: p["poblacion"],reverse=True) 
                     for pais in registro_ordenado:
                         print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
                 case _:
@@ -247,6 +268,10 @@ def ordenar_paises(registro): #Organizar paises por nombre,poblacion,superficie
             return
 
 def mostrar_estadisticas(registro): #País con mayor y menor población - Promedio de población - Promedio de superficie - Cantidad de países por continente
+    vacio=registro_vacio(registro)
+    if vacio==None:
+        return
+    
     print("==== ESTADISTICAS ====")
     menu = input("1.Pais con mayor y menor poblacion\n2.Promedio de poblacion\n3.Promedio de superficie\n4.Cantidad de paises por continente\nElija una opcion --> ")
     match menu:
