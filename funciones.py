@@ -255,11 +255,36 @@ def mostrar_estadisticas(registro): #País con mayor y menor población - Promed
             print(f"Pais con menor poblacion: Pais: {registro_ordenado[0]["nombre"]} - Poblacion: {registro_ordenado[0]["poblacion"]} - Superficie: {registro_ordenado[0]["superficie"]} - Continente: {registro_ordenado[0]["continente"]}")
             print(f"Pais con mayor poblacion: Pais: {registro_ordenado[-1]["nombre"]} - Poblacion: {registro_ordenado[-1]["poblacion"]} - Superficie: {registro_ordenado[-1]["superficie"]} - Continente: {registro_ordenado[-1]["continente"]}")
         case "2": #Promedio de poblacion
-            pass
+            sumatoria=0
+            for pais in registro: #Recorro todos los paises agregando la variable poblacion a la sumatoria
+                poblacion = int(pais["poblacion"])
+                sumatoria+=poblacion
+            promedio_poblacion=sumatoria/len(registro)
+
+            print("=== PROMEDIO POBLACION ===")
+            print(f"El promedio de poblacion entre estos {len(registro)} paises es de: {(promedio_poblacion):.2f} habitantes")
         case "3": #Promedio de superficie
-            pass
+            sumatoria=0
+            for pais in registro: #Misma logica que para el case 2
+                superficie = int(pais["superficie"])
+                sumatoria+=superficie
+            promedio_superficie=sumatoria/len(registro)
+            
+            print("=== PROMEDIO SUPERFICIE ===")
+            print(f"El promedio de superficie entre estos {len(registro)} paises es de: {(promedio_superficie):.2f} km2")
         case "4": #Cantidad de paises por continente
-            pass
+            registro_ordenado=sorted(registro,key=lambda p:p["continente"]) #Ordeno aunque daria igual porque recorro todos los valores
+            conteo=[]
+            for continente in continentes: #Para cada continente recorro la lista buscando quien presenta el mismo continente que el recorrido actualmente
+                contador=0
+                for pais in registro_ordenado:
+                    if continente==pais["continente"]: #Si el continente coincide lo sumo al contador
+                        contador +=1
+                conteo.append(contador) #Termino de recorrer todos los paises con el continente actual guardardo el contador y saltando al siguiente continente
+
+            print("=== PAISES POR CONTINENTE ===")
+            for i in range(len(continentes)):
+                print(f"{continentes[i]}: {conteo[i]} paises")
         case _:
             print("Error, reintente eligiendo una de las opciones validas")
             return
