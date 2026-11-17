@@ -92,7 +92,7 @@ def comparar_pais(pais): #Acceso al .txt con los paises registrados por la ONU
 def registro_vacio(registro):
     if len(registro)==0:
         print("Error, no hay ningun pais cargado, comience con la opcion 1.")
-        return None
+        return "error"
     return
 #MENU
 
@@ -107,6 +107,7 @@ def nuevo_pais(registro,cabecera): #Agregar un pais
         if paises["nombre"]==nombre:
             print("Este pais ya esta registrado, si quiere actualizar sus datos use la opcion 2.")
             return
+        
     poblacion = pedir_entero("Ingrese la poblacion: ",0,persiste=False)
     superficie = pedir_entero("Ingrese la superficie del pais (km2): ",0,persiste=False)
     continente = pedir_cadena("Ingrese el continente de este pais: ",persiste=False)
@@ -176,11 +177,12 @@ def filtrar_paises(registro): #Filtro de paises por continente,poblacion,superfi
     opcion = input("a.Filtro por continente\nb.Filtro por rango de poblacion\nc.Filtro por rango de superficie\nElija una opcion para continuar -->")
     match opcion:
         case "a": #Por continente
-            continente=pedir_cadena("Ingrese el continente para filtrar los paises: ",False).lower()
+            continente=pedir_cadena("Ingrese el continente para filtrar los paises: ",False).title()
             if continente==None:
                 return
             if continente in continentes: #Recorro el registro de paises y me quedo con aquellos que coincidan con el continente
                 print(f"=== PAISES DE {(continente).upper()} ===")
+
                 for paises in registro:
                     if paises["continente"]==continente:
                         print(f"Pais: {paises["nombre"]} - Poblacion: {paises["poblacion"]} - Superficie: {paises["superficie"]}")
@@ -196,10 +198,12 @@ def filtrar_paises(registro): #Filtro de paises por continente,poblacion,superfi
             if minimo>maximo:
                 print("El minimo debe ser inferior al maximo")
                 return
+            
             print(f"== Lista de paises con poblacion entre {minimo}-{maximo} ==") #Comparo y imprimo aquellos que superen el minimo pero sean inferiores al maximo
             for paises in registro:
                 if paises["poblacion"]>=minimo and paises["poblacion"]<=maximo:
                     print(f"Pais: {paises["nombre"]} - Poblacion: {paises["poblacion"]} - Superficie: {paises["superficie"]} - Continente: {paises["continente"]}")
+
             return
         case "c": #por superficie
             minimo = pedir_entero("Ingrese el rango minimo de superficie (km2): ",0,persiste=False)
@@ -228,10 +232,12 @@ def ordenar_paises(registro): #Organizar paises por nombre,poblacion,superficie
                     registro_ordenado = sorted(registro, key=lambda p: p["nombre"]) 
                     for pais in registro_ordenado:
                         print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
+
                 case "2": #Descendente
                     registro_ordenado = sorted(registro, key=lambda p: p["nombre"],reverse=True) 
                     for pais in registro_ordenado:
                         print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
+
                 case _:
                     print("Error, elija una de las dos formas.")
                     return
@@ -242,6 +248,7 @@ def ordenar_paises(registro): #Organizar paises por nombre,poblacion,superficie
                     registro_ordenado = sorted(registro, key=lambda p: p["poblacion"]) 
                     for pais in registro_ordenado:
                         print(f"Pais: {pais["nombre"]} - Poblacion: {pais["poblacion"]} - Superficie: {pais["superficie"]} - Continente: {pais["continente"]}")
+
                 case "2": #Descendente
                     registro_ordenado = sorted(registro, key=lambda p: p["poblacion"],reverse=True) 
                     for pais in registro_ordenado:
@@ -269,21 +276,21 @@ def ordenar_paises(registro): #Organizar paises por nombre,poblacion,superficie
 
 def mostrar_estadisticas(registro): #País con mayor y menor población - Promedio de población - Promedio de superficie - Cantidad de países por continente
     vacio=registro_vacio(registro)
-    if vacio==None:
+    if vacio=="error":
         return
     
     print("==== ESTADISTICAS ====")
     menu = input("1.Pais con mayor y menor poblacion\n2.Promedio de poblacion\n3.Promedio de superficie\n4.Cantidad de paises por continente\nElija una opcion --> ")
     match menu:
         case "1": #Pais con mayor y menor poblacion
-            registro_ordenado=sorted(registro,key=lambda p:p["poblacion"]) #Ordeno y acceso al numero de poblacion mas bajo y al mas alto mediante indice
+            registro_ordenado = sorted(registro,key=lambda p:p["poblacion"]) #Ordeno y acceso al numero de poblacion mas bajo y al mas alto mediante indice
             print(f"Pais con menor poblacion: Pais: {registro_ordenado[0]["nombre"]} - Poblacion: {registro_ordenado[0]["poblacion"]} - Superficie: {registro_ordenado[0]["superficie"]} - Continente: {registro_ordenado[0]["continente"]}")
             print(f"Pais con mayor poblacion: Pais: {registro_ordenado[-1]["nombre"]} - Poblacion: {registro_ordenado[-1]["poblacion"]} - Superficie: {registro_ordenado[-1]["superficie"]} - Continente: {registro_ordenado[-1]["continente"]}")
         case "2": #Promedio de poblacion
             sumatoria=0
             for pais in registro: #Recorro todos los paises agregando la variable poblacion a la sumatoria
                 poblacion = int(pais["poblacion"])
-                sumatoria+=poblacion
+                sumatoria += poblacion
             promedio_poblacion=sumatoria/len(registro)
 
             print("=== PROMEDIO POBLACION ===")
@@ -292,7 +299,7 @@ def mostrar_estadisticas(registro): #País con mayor y menor población - Promed
             sumatoria=0
             for pais in registro: #Misma logica que para el case 2
                 superficie = int(pais["superficie"])
-                sumatoria+=superficie
+                sumatoria += superficie
             promedio_superficie=sumatoria/len(registro)
             
             print("=== PROMEDIO SUPERFICIE ===")
