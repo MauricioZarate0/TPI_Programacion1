@@ -234,8 +234,13 @@ Oceania: 1 paises
 
 ---
 
-### 7. Salir
+7. Salir
 
 ```
 Saliendo del programa
 ```
+
+###VIDEO
+https://drive.google.com/file/d/10GahK9SOEWWa53oyvBR-y1dNsylwmN9J/view?usp=sharing
+###PDF
+https://drive.google.com/file/d/1peQjBdXxGMIK14AescUDnrpbJ0hNz2_O/view?usp=sharing
