@@ -1,14 +1,12 @@
 # TPI_Programacion1
 
-## Funciones del menú: ejemplos de entrada y salida
+# Funciones del menu: ejemplos de entrada y salida
 
-Para iniciar el programa:
+Bloque principal: main.py
+Bloque de funciones: funciones.py
+Archivo de guardado: "paises.csv"
 
-```
-python main.py
-```
-
-Menú principal:
+Menu:
 
 ```
 1.Agregar un pais
@@ -21,15 +19,13 @@ Menú principal:
 Elija una opcion -->
 ```
 
-Los ejemplos usan el dataset base de `paises.csv`.
 
----
+1. Agregar un país
 
-### 1. Agregar un país
+Pide el nombre, la población, la superficie (km²) y el continente. El nombre se compara con "lista_paises.txt" (paises reconocidos por la ONU). El país se guarda en "paises.csv".
 
-Pide el nombre, la población, la superficie (km²) y el continente. El nombre se compara con `lista_paises.txt` (países reconocidos por la ONU). El país se guarda en `paises.csv`.
-
-**Caso correcto**
+fuente: https://visitedatlas.com/es/un-member-states
+**Flujo de ejecucion correcto**
 
 ```
 Ingrese el nombre del pais nuevo (respetar tildes): Japón
@@ -40,7 +36,7 @@ Ingrese el continente de este pais: Asia
 Se cargo el pais correctamente
 ```
 
-**País ya registrado**
+**Error, pais ya registrado**
 
 ```
 Ingrese el nombre del pais nuevo (respetar tildes): Argentina
@@ -48,7 +44,7 @@ El pais ingresado coincide con el registro de la ONU.
 Este pais ya esta registrado, si quiere actualizar sus datos use la opcion 2.
 ```
 
-**País inexistente**
+**Error, pais inexistente**
 
 ```
 Ingrese el nombre del pais nuevo (respetar tildes): Wakanda
@@ -57,11 +53,11 @@ El pais ingresado no existe o no coincide con los registros de la ONU.
 
 ---
 
-### 2. Actualizar datos de un país
+2. Actualizar datos de un pais
 
-Reemplaza la población y la superficie de un país ya registrado.
+Darle nuevos valores de la población y la superficie de un país ya registrado.
 
-**Caso correcto**
+**Flujo de ejecucion correcto**
 
 ```
 === Actualizacion de datos ===
@@ -70,9 +66,9 @@ Ingrese la nueva poblacion: 46700000
 Ingrese la nueva superficie (km2): 2780400
 ```
 
-El archivo `paises.csv` queda con `Argentina,46700000,2780400,America`.
+El archivo "paises.csv" queda como "Argentina,46700000,2780400,America"
 
-**País no registrado**
+**Error, país no registrado**
 
 ```
 === Actualizacion de datos ===
@@ -82,7 +78,7 @@ No se encontro registrado el pais, use la opcion 1 si desea agregarlo al registr
 
 ---
 
-### 3. Buscar país
+3. Buscar pais
 
 Busca por coincidencia parcial o exacta del nombre.
 
@@ -95,7 +91,7 @@ Pais: Argentina - Poblacion: 46654581 - Superficie: 2780400 - Continente: Americ
 Pais: Argelia - Poblacion: 45606480 - Superficie: 2381741 - Continente: Africa
 ```
 
-**Sin resultados**
+**Error, sin resultados**
 
 ```
 Ingrese el nombre del pais que desea buscar (respete tildes): Chile
@@ -104,9 +100,9 @@ No se encontraron coincidencias.
 
 ---
 
-### 4. Filtrar países
+4. Filtrar países
 
-Submenú:
+Clasificacion:
 
 ```
 a.Filtro por continente
@@ -126,7 +122,7 @@ Pais: Costa Rica - Poblacion: 5212173 - Superficie: 51100
 Pais: República Dominicana - Poblacion: 11332972 - Superficie: 48671
 ```
 
-**b. Por rango de población**
+**b. Por rango de poblacion**
 
 ```
 Ingrese el rango minimo de poblacion: 10000000
@@ -150,7 +146,7 @@ Pais: Argentina - Poblacion: 46654581 - Superficie: 2780400 - Continente: Americ
 Pais: Argelia - Poblacion: 45606480 - Superficie: 2381741 - Continente: Africa
 ```
 
-**Rango inválido**
+**Eror, rango invalido**
 
 ```
 Ingrese el rango minimo de superficie (km2): 500
@@ -160,11 +156,11 @@ El minimo debe ser inferior al maximo
 
 ---
 
-### 5. Ordenar países
+5. Ordenar países
 
-Submenú: `a` por nombre, `b` por población, `c` por superficie. Después pide `1` (ascendente) o `2` (descendente).
+Clasificacion: "a" por nombre, "b" por población, "c" por superficie. Despues pide "1" (ascendente) o "2" (descendente).
 
-**Por nombre, ascendente (a → 1)**
+**Por nombre, ascendente**
 
 ```
 Pais: Afganistán - Poblacion: 41128771 - Superficie: 652230 - Continente: Asia
@@ -177,7 +173,7 @@ Pais: Estados Unidos - Poblacion: 334914895 - Superficie: 9833520 - Continente: 
 Pais: República Dominicana - Poblacion: 11332972 - Superficie: 48671 - Continente: America
 ```
 
-**Por superficie, descendente (c → 2)**
+**Por superficie, descendente**
 
 ```
 Pais: Estados Unidos - Poblacion: 334914895 - Superficie: 9833520 - Continente: America
@@ -192,9 +188,9 @@ Pais: República Dominicana - Poblacion: 11332972 - Superficie: 48671 - Continen
 
 ---
 
-### 6. Mostrar estadísticas
+6. Mostrar estadísticas
 
-Submenú:
+Clasificacion:
 
 ```
 1.Pais con mayor y menor poblacion
@@ -203,7 +199,7 @@ Submenú:
 4.Cantidad de paises por continente
 ```
 
-**1. Mayor y menor población**
+**1. Mayor y menor poblacion**
 
 ```
 Pais con menor poblacion: Pais: Costa Rica - Poblacion: 5212173 - Superficie: 51100 - Continente: America
@@ -238,8 +234,13 @@ Oceania: 1 paises
 
 ---
 
-### 7. Salir
+7. Salir
 
 ```
 Saliendo del programa
 ```
+
+###VIDEO
+https://drive.google.com/file/d/10GahK9SOEWWa53oyvBR-y1dNsylwmN9J/view?usp=sharing
+###PDF
+https://drive.google.com/file/d/1peQjBdXxGMIK14AescUDnrpbJ0hNz2_O/view?usp=sharing
